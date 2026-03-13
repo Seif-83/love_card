@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى حبيبتي - بطاقة خاصة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Dancing+Script&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --secondary-color: #ffb3c1;
+            --bg-color: #fff0f3;
+        }
+
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Amiri', serif;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* إخفاء شريط التمرير */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        /* إخفاء شريط التمرير (Chrome, Safari, Opera) */
+        body::-webkit-scrollbar, 
+        html::-webkit-scrollbar,
+        #card-content::-webkit-scrollbar,
+        #birthday-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* صفحة تسجيل الدخول */
+        #login-page {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2);
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        h2 {
+            color: var(--primary-color);
+        }
+
+        input[type="password"] {
+            padding: 12px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            font-size: 18px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #c9184a;
+            transform: scale(1.05);
+        }
+
+        /* محتوى البطاقة (مخفي في البداية) */
+        #card-content {
+            display: none;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 2s ease;
+            z-index: 5;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        #birthday-content {
+            display: none;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            animation: fadeIn 2s ease;
+            z-index: 5;
+            overflow-y: auto;
+            max-height: 90vh;
+            
+            /* تأثير الزجاج لصفحة عيد الميلاد */
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .love-message {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 2px dashed var(--primary-color);
+        }
+
+        /* تنسيق خاص لرسالة عيد الميلاد بدون خلفية بيضاء لتظهر تأثير الزجاج */
+        #birthday-content .love-message {
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+            border: 2px dashed rgba(255, 77, 109, 0.8);
+            position: relative; /* لتمكين استخدام z-index */
+            z-index: 20; /* جعل النص بالكامل فوق الصور */
+        }
+
+        .love-message p {
+            font-size: 24px;
+            color: #590d22;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        #read-msg-btn {
+            background: rgba(255, 77, 109, 0.9);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            font-family: 'Amiri', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            margin-top: 15px;
+            z-index: 30;
+            position: relative;
+        }
+
+        #read-msg-btn:hover {
+            transform: scale(1.05);
+            background: #c9184a;
+        }
+
+        /* حاوية النص المخفية */
+        #hidden-msg {
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+
+        .video-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* خلفية القلوب المتحركة */
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            background-color: var(--primary-color);
+            width: 20px;
+            height: 20px;
+            transform: rotate(-45deg);
+            animation: move 5s linear infinite;
+            opacity: 0.6;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 10px;
+            top: 0;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(100vh) rotate(-45deg) scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(-45deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* صور الخلفية الإبداعية */
+        .bg-photos {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* حتى لا تمنع النقر على النص */
+            z-index: 10; /* جعل الصور فوق محتوى البطاقة */
+            overflow: hidden;
+            display: none; /* ستظهر فقط مع صفحة عيد الميلاد */
+        }
+
+        .bg-photos img {
+            position: absolute;
+            width: 30vw;
+            max-width: 280px;
+            min-width: 150px;
+            height: auto;
+            border-radius: 10px;
+            border: 10px solid white;
+            border-bottom: 30px solid white; /* شكل صورة البولارويد */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            opacity: 0.6; /* زيادة الشفافية لتكون الصور أوضح */
+            transition: all 0.5s ease;
+            filter: drop-shadow(2px 4px 6px rgba(255, 77, 109, 0.4));
+        }
+
+        /* توزيع الصور في الخلفية بشكل عشوائي */
+        .bg-photos img:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            transform: rotate(-15deg);
+            animation: float1 6s ease-in-out infinite alternate;
+        }
+
+        .bg-photos img:nth-child(2) {
+            top: 40%;
+            right: 5%;
+            transform: rotate(12deg);
+            animation: float2 7s ease-in-out infinite alternate;
+        }
+
+        .bg-photos img:nth-child(3) {
+            bottom: 10%;
+            left: 20%;
+            transform: rotate(-8deg);
+            animation: float3 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes float1 {
+            0% { transform: translateY(0px) rotate(-15deg); }
+            100% { transform: translateY(-20px) rotate(-10deg); }
+        }
+        @keyframes float2 {
+            0% { transform: translateY(0px) rotate(12deg); }
+            100% { transform: translateY(-25px) rotate(18deg); }
+        }
+        @keyframes float3 {
+            0% { transform: translateY(0px) rotate(-8deg); }
+            100% { transform: translateY(-20px) rotate(-2deg); }
+        }
+
+        /* تحسين العرض على الهواتف المحمولة */
+        @media (max-width: 768px) {
+            #birthday-content {
+                width: 85%; /* تقليل عرض البطاقة قليلاً لترك مساحة للصور الجانبية */
+            }
+
+            .bg-photos img {
+                width: 45vw; /* تكبير الصور على المحمول لتبرز أكثر */
+                min-width: 120px;
+                border-width: 6px;
+                border-bottom-width: 20px;
+                opacity: 0.65; /* زيادة الوضوح لتكون مرئية بخلفية البطاقة */
+            }
+
+            .bg-photos img:nth-child(1) {
+                top: -2%;
+                left: -5%;
+                z-index: 1; /* السماح بتغطية أطراف البطاقة أحياناً */
+            }
+
+            .bg-photos img:nth-child(2) {
+                top: 38%;
+                right: -10%;
+            }
+
+            .bg-photos img:nth-child(3) {
+                bottom: 0%;
+                left: -8%;
+                z-index: 1;
+            }
+            
+            #birthday-content .love-message, #card-content .love-message {
+                padding: 15px;
+            }
+            
+            #birthday-content h1, #card-content h1 {
+                font-size: 28px;
+            }
+            
+            #birthday-content h2 {
+                font-size: 24px !important;
+            }
+            
+            #birthday-content p, #card-content p {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- القلوب في الخلفية -->
+    <div class="hearts" id="heart-bg"></div>
+
+    <!-- صفحة الدخول -->
+    <div id="login-page">
+        <h2>تاريخ عيد ميلادك ❤️</h2>
+        <input type="password" id="password" placeholder="كلمة السر">
+        <br>
+        <button onclick="checkPassword()">دخول</button>
+        <p id="error-msg" style="color: red; display: none; margin-top: 10px;">عذراً، كلمة السر غير صحيحة!</p>
+    </div>
+
+    <!-- محتوى البطاقة -->
+    <div id="card-content">
+        <div class="love-message">
+            <h1 style="font-family: 'Dancing Script', cursive;">I Love You</h1>
+            <p>
+                وحشتيني ينور عيني مش عايزه تقوليلي وانا كمان وله اي
+                متزعليش مني يحبيبتي انا
+                هعملك كل الي انتي عايزه وهحاول عشان تبقي مبسوطه
+                بحبك ومش بحب قدك يحبيبتي ربنا يخليكي ليا يدنيتي <br>
+                <br>
+                يمكن يادنيا الكلام الي هقولو ميوصفش كل الي جويا
+                انتي مش حد مثلا بحكيلو وعايز حلولو لو حصل حاجه لا انتي الحد الي لما بحكيلو ببقا عايز بس انك تسمعني مش اي
+                حاجه تانيه دي كفايه عندي امان لما الدنيا تقسي دفا لما الدنيا تشد بحبك زي ما انتي انتي الي بتخلي ايامي
+                احلي شكرا لانك موجوده شكرا لانك خليتيني حاسس ب الامان
+                <br>
+                <br>
+                انت نعمة ربنا عليا
+            </p>
+        </div>
+
+        <div class="video-container">
+            <img src="رسالة حب.jpeg" alt="رسالة حب" style="width: 100%; height: auto; display: block;">
+        </div>
+
+        <p style="margin-top: 20px; font-style: italic;">هتفضلي دايما في قلبي.. 8-12-2022</p>
+    </div>
+
+    <!-- صور الخلفية المبدعة (مخفية في البداية) -->
+    <div class="bg-photos" id="birthday-bg-photos">
+        <img src="fatma1.jpeg" alt="صورة فاطمة 1">
+        <img src="fatma2.jpeg" alt="صورة فاطمة 2">
+        <img src="fatma3.jpeg" alt="صورة فاطمة 3">
+    </div>
+
+    <!-- محتوى عيد الميلاد -->
+    <div id="birthday-content">
+        <div class="love-message" style="box-shadow: 0 20px 40px rgba(255, 77, 109, 0.15);">
+            <h1 style="font-family: 'Dancing Script', cursive;">Happy Birthday</h1>
+            <h2 style="font-family: 'Amiri', serif; font-size: 36px; margin: 10px 0; color: var(--primary-color);">fatoma</h2>
+            
+            <button id="read-msg-btn" onclick="showBirthdayMessage()">Open💌</button>
+            
+            <div id="hidden-msg">
+                <p>
+                   Wishing you the happiest birthday ever I hope your heart always stays as pure and beautiful as it is I don’t know how I’d get through my days, my problems without crazy fatouma yarb nfdl sohab aala tol w yarb th’’i kol haga bttmniha
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // دالة فحص كلمة السر
+        function checkPassword() {
+            const pass = document.getElementById('password').value;
+            const correctPass = "8122022";
+            const birthdayPass = "352005";
+
+            if (pass === correctPass) {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('card-content').style.display = 'block';
+                document.body.style.overflowY = 'auto'; // تفعيل التمرير عند الحاجة
+            } else if (pass === birthdayPass) {
+                document.getElementById('login-page').style.display = 'none';
+                document.getElementById('birthday-content').style.display = 'block';
+                document.getElementById('birthday-bg-photos').style.display = 'block'; // عرض صور الخلفية
+                document.body.style.overflowY = 'auto'; // تفعيل التمرير عند الحاجة
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        // إنشاء قلوب عشوائية في الخلفية
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.getElementById('heart-bg').appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(createHeart, 300);
+
+        // إظهار رسالة عيد الميلاد المخفية
+        function showBirthdayMessage() {
+            document.getElementById('read-msg-btn').style.display = 'none';
+            document.getElementById('hidden-msg').style.display = 'block';
+            
+            // جعل صور الخلفية شفافة جداً ومتباعدة عند قراءة النص لتسهيل القراءة
+            const photos = document.querySelectorAll('.bg-photos img');
+            photos.forEach(photo => {
+                photo.style.opacity = '0.15';
+                photo.style.filter = 'blur(3px)';
+            });
+        }
+    </script>
+</body>
+
+</html>
